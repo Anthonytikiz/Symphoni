@@ -1,8 +1,13 @@
 # Utilisation d'une image PHP officielle
-FROM php:8.1-fpm
+FROM php:8.2-fpm
+
+# Définir la variable d'environnement HOME pour éviter les problèmes avec Symfony CLI
+ENV HOME=/root
 
 # Installation des dépendances nécessaires
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git unzip
+RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git unzip libxml2-dev libxslt-dev libicu-dev libzip-dev && \
+    docker-php-ext-configure zip && \
+    docker-php-ext-install zip
 
 # Installation de Composer (gestionnaire de dépendances PHP)
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -21,7 +26,7 @@ COPY . .
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # Installation des dépendances du projet avec Composer
-RUN composer install --ignore-platform-reqs
+RUN composer install
 
 # Exposition du port 9000 pour PHP-FPM
 EXPOSE 9000
