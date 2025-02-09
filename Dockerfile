@@ -28,6 +28,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # Installation des dépendances du projet avec Composer
 RUN composer install
 
+ENV PORT=9000
 # Exposition du port 9000 pour PHP-FPM
 EXPOSE 9000
 
