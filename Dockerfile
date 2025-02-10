@@ -25,6 +25,9 @@ RUN composer install --ignore-platform-reqs --optimize-autoloader --no-interacti
 RUN mkdir -p var/log var/cache public && \
     chown -R www-data:www-data var/log var/cache public
 
+# Créer le répertoire de log pour php-fpm et définir les permissions
+RUN mkdir -p /var/log/php-fpm && chown -R www-data:www-data /var/log/php-fpm
+
 # Copier la configuration NGINX et Supervisor
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
