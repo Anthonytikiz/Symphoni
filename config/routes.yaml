@@ -1,9 +1,9 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
 # config/routes.yaml
+
+controllers:
+    resource: '../src/Controller/'
+    type: attribute   # Utilisation des attributs dans les contrôleurs
+
 api:
     resource: '../src/Controller/API'
-    type: annotation
+    type: annotation  # Utilisation des annotations pour le namespace API
