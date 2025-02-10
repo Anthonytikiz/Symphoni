@@ -1,31 +1,31 @@
+# Image de base
 FROM php:8.3.6-fpm
 
-# Définir la variable d'environnement HOME
-ENV HOME=/root
-
-# Installation des dépendances nécessaires
+# Installer les dépendances
 RUN apt-get update && apt-get install -y \
-    zip git unzip libxml2-dev libxslt-dev \
+    nginx zip git unzip libxml2-dev libxslt-dev \
     libicu-dev libzip-dev && \
     docker-php-ext-configure zip && \
     docker-php-ext-install zip
 
-# Installation de Composer
+# Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Définition du répertoire de travail
+# Définir le répertoire de travail
 WORKDIR /var/www
 
-# Copie des fichiers du projet
+# Copier les fichiers du projet
 COPY . .
 
-# Exécution de Composer
+# Installer les dépendances PHP avec Composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --ignore-platform-reqs
 
-# Définition du port exposé
-ENV PORT=9000
-EXPOSE 9000
+# Copier la configuration NGINX
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Commande pour démarrer PHP-FPM
-CMD ["php-fpm", "--nodaemonize", "--fpm-config", "/usr/local/etc/php-fpm.conf"]
+# Exposer le port 80
+EXPOSE 80
+
+# Lancer NGINX et PHP-FPM ensemble
+CMD service nginx start && php-fpm --nodaemonize
