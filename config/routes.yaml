@@ -7,3 +7,7 @@ controllers:
 api:
     resource: '../src/Controller/API'
     type: attribute      # Utilisation des annotations pour le namespace API
+api_admin_login:
+  path: /api/admins/login
+  controller: App\Controller\API\AdminController::login
+  methods: [POST]
