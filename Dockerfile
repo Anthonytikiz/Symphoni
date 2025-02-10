@@ -1,5 +1,5 @@
 # Utilisation d'une image PHP officielle
-FROM php:8.2-fpm
+FROM php:8.3.6-fpm
 
 # Définir la variable d'environnement HOME pour éviter les problèmes avec Symfony CLI
 ENV HOME=/root
