@@ -32,6 +32,8 @@ RUN mkdir -p /var/log/php-fpm && chown -R www-data:www-data /var/log/php-fpm
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+CMD service nginx start && php-fpm --nodaemonize
+
 # Installer Supervisor
 RUN apt-get install -y supervisor
 
