@@ -23,6 +23,7 @@ WORKDIR /var/www
 
 # Copie des fichiers du projet
 COPY . .
+RUN composer clear-cache
 
 # Exécution de Composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -34,3 +35,4 @@ EXPOSE 80
 
 # Commande pour démarrer PHP-FPM
 CMD ["php-fpm", "--nodaemonize", "--fpm-config", "/usr/local/etc/php-fpm.conf"]
+
