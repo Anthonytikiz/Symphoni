@@ -1,15 +1,17 @@
-# Utilisation d'une image PHP officielle
 FROM php:8.3.6-fpm
 
-# Définir la variable d'environnement HOME pour éviter les problèmes avec Symfony CLI
+# Définir la variable d'environnement HOME
 ENV HOME=/root
 
-# Installation des dépendances nécessaires
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git unzip libxml2-dev libxslt-dev libicu-dev libzip-dev && \
+# Installation des dépendances
+RUN apt-get update && apt-get install -y \
+    libpng-dev libjpeg-dev libfreetype6-dev \
+    zip git unzip libxml2-dev libxslt-dev \
+    libicu-dev libzip-dev && \
     docker-php-ext-configure zip && \
     docker-php-ext-install zip
 
-# Installation de Composer (gestionnaire de dépendances PHP)
+# Installation de Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Installation de Symfony CLI
@@ -19,18 +21,16 @@ ENV PATH="$HOME/.symfony*/bin:$PATH"
 # Définition du répertoire de travail
 WORKDIR /var/www
 
-# Copie des fichiers du projet dans le container
+# Copie des fichiers du projet
 COPY . .
 
-# Permet l'exécution de Composer en tant que superutilisateur
+# Exécution de Composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
+RUN composer install --ignore-platform-reqs
 
-# Installation des dépendances du projet avec Composer
-RUN composer install
-
-ENV PORT=9000
-# Exposition du port 9000 pour PHP-FPM
-EXPOSE 9000
+# Port d'exposition
+ENV PORT=80
+EXPOSE 80
 
 # Commande pour démarrer PHP-FPM
-CMD ["php-fpm"]
+CMD ["php-fpm", "--nodaemonize", "--fpm-config", "/usr/local/etc/php-fpm.conf"]
