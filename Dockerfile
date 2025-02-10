@@ -5,6 +5,7 @@ ENV HOME=/root
 
 # Installation des dépendances
 RUN apt-get update && apt-get install -y \
+    nginx \
     libpng-dev libjpeg-dev libfreetype6-dev \
     zip git unzip libxml2-dev libxslt-dev \
     libicu-dev libzip-dev && \
@@ -23,16 +24,19 @@ WORKDIR /var/www
 
 # Copie des fichiers du projet
 COPY . .
+
 RUN composer clear-cache
 
 # Exécution de Composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN composer install --ignore-platform-reqs
 
+# Configuration de NGINX
+COPY nginx.conf /etc/nginx/nginx.conf
+
 # Port d'exposition
 ENV PORT=80
 EXPOSE 80
 
-# Commande pour démarrer PHP-FPM
-CMD ["php-fpm", "--nodaemonize", "--fpm-config", "/usr/local/etc/php-fpm.conf"]
-
+# Commande pour démarrer NGINX et PHP-FPM
+CMD service nginx start && php-fpm --nodaemonize --fpm-config /usr/local/etc/php-fpm.conf
