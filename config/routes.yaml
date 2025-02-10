@@ -6,4 +6,4 @@ controllers:
 
 api:
     resource: '../src/Controller/API'
-    type: annotation  # Utilisation des annotations pour le namespace API
+    type: attribute      # Utilisation des annotations pour le namespace API
